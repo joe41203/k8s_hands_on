@@ -1,3 +1,9 @@
+git clone
+
+```
+$ git clone https://github.com/joe41203/k8s_hands_on.git
+```
+
 minikube を起動
 
 ```
