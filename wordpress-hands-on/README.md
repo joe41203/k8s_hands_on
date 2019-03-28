@@ -4,6 +4,12 @@ minikube を起動
 $ minikube start
 ```
 
+workspace を変更
+
+```
+$ cd wordpress-hands-on
+```
+
 password を暗号化
 
 ```
