@@ -1,0 +1,40 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+    tier: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: wordpress
+    tier: mysql
+  clusterIP: None
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.6
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password.txt
+          ports:
+            - containerPort: 3360
+              name: mysql

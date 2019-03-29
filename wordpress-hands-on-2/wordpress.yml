@@ -1,0 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+    tier: web
+spec:
+  selector:
+    app: wordpress
+    tier: web
+  type: NodePort
+  ports:
+    - name: wordpress-port
+      port: 80
+      targetPort: 80
+      nodePort: 30180
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wordpress-deployment
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: web
+    spec:
+      containers:
+        - image: wordpress
+          name: wordpress
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: wordpress-mysql:3306
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password.txt
+          ports:
+            - containerPort: 80
+              name: wordpress
